@@ -34,11 +34,13 @@ parseData <- function(fxdata, fydata, fsubjects)
   d <- cbind(xdata, ydata, subjects)
 }
 
+# get data dir either from passed in arguments, if invoked in Rscript: "Rscript run_analysis.R <dir>"
 #args <- commandArgs(TRUE)
 #print(args)
-
 #dataDir <- args[[1]]
-cat("dir=",dataDir,"\n", sep="")
+
+# or directly using working dir
+#dataDir <- getwd()
 
 # read in activity info
 activity <- read.csv(f("activity_labels.txt"),
@@ -66,26 +68,38 @@ d <- rbind(trainDf, testDf)
 # only keep the variable column with mean()/std() in their names
 # sort the variable columns alphabetically at the same time to make it more readable
 v <- sort(names(d)[grep("(mean|std)\\(\\)", names(d))])
-e <- d[,v]
 
-# aggregate each variable column by subject and activityId, using "mean" function
-f <- aggregate(e, by=list(subject=d$subject, activityId=d$activityId), mean)
+# ---------------------------------------------------------------
+# data aggregation generation method 1: aggregate + merge + order
+# ---------------------------------------------------------------
+# e <- d[,v]
+# f <- aggregate(e, by=list(subject=d$subject, activityId=d$activityId), mean)
+# g <- merge(activity,f)
+# h <- g[,c(3,2,seq(4,ncol(g)))]
+# i <- h[order(h$subject, h$activityDescription),]
+# rownames(i) <- NULL
 
-# get activity description from activityId by merging with activity df, and remove the activityId
-g <- merge(activity,f)
 
-# select & reorder columns to make its column look like: subject,activityDescription,variable1,variable2,...,variableN
-h <- g[,c(3,2,seq(4,ncol(g)))]
+# --------------------------------------------------
+# data aggregation generation method 2: melt + dcast
+# --------------------------------------------------
+library(reshape2)
+e <- merge(activity,d)
+f <- e[c("subject", "activityDescription", v)]
+g <- melt(f, id=c("subject", "activityDescription"))
+twide <- dcast(g, subject + activityDescription ~ ..., mean)
+tlong <- melt(twide, id=c("subject", "activityDescription"))
 
-# order rows by (subject,activityDescription), reset rownames to force row numbers to re-generate
-i <- h[order(h$subject, h$activityDescription),]
-rownames(i) <- NULL
-
-# save to table
-write.table(i, file="final.txt", row.names=FALSE, sep=",")
+# save to table both wide format and long format
+write.table(twide, file="final_wide.txt", row.names=FALSE, sep=",")
+write.table(tlong, file="final_long.txt", row.names=FALSE, sep=",")
 
 #can be recovered by
-#r <- read.table("final.txt", sep=",", header=TRUE)
+#r <- read.table("final_wide.txt", sep=",", header=TRUE)
 
 # print head of table
-print(head(i, 5))
+print("sample wide format:(only first 6 columns displayed)")
+print(head(twide[1:6], 5))
+
+print("sample long format:")
+print(head(tlong, 5))
