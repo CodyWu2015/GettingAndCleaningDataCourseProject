@@ -72,6 +72,14 @@ v <- sort(names(d)[grep("(mean|std)\\(\\)", names(d))])
 # ---------------------------------------------------------------
 # data aggregation generation method 1: aggregate + merge + order
 # ---------------------------------------------------------------
+# explanation:
+#    i) select columns with matching variable names 
+#   ii) aggregate with mean(), grouped by (subject, activityId) pair
+#  iii) merge with activity to translate activityId to activityDescription
+#   iv) select subject/activityDescription/variable columns
+#    v) reorder data rows by (subject,activityDescription) pair
+#   vi) clear rownames to force regeneration of row sequence
+#
 # e <- d[,v]
 # f <- aggregate(e, by=list(subject=d$subject, activityId=d$activityId), mean)
 # g <- merge(activity,f)
@@ -79,14 +87,20 @@ v <- sort(names(d)[grep("(mean|std)\\(\\)", names(d))])
 # i <- h[order(h$subject, h$activityDescription),]
 # rownames(i) <- NULL
 
-
 # --------------------------------------------------
 # data aggregation generation method 2: melt + dcast
 # --------------------------------------------------
+# explanation:
+#   i) first merge with activity df to translate activityId to activityDescription
+#  ii) select subject/activityDescription/variable columns 
+# iii) melt data to long format, using (subject,activityDescription) as ID variables
+#  iv) dcast data back to wide format, aggregate with mean(), grouped by (subject,activityDescription)
+#   v) meta wide format back to long format for later saving
+#
 library(reshape2)
-e <- merge(activity,d)
-f <- e[c("subject", "activityDescription", v)]
-g <- melt(f, id=c("subject", "activityDescription"))
+e     <- merge(activity,d)
+f     <- e[c("subject", "activityDescription", v)]
+g     <- melt(f, id=c("subject", "activityDescription"))
 twide <- dcast(g, subject + activityDescription ~ ..., mean)
 tlong <- melt(twide, id=c("subject", "activityDescription"))
 
@@ -95,7 +109,8 @@ write.table(twide, file="final_wide.txt", row.names=FALSE, sep=",")
 write.table(tlong, file="final_long.txt", row.names=FALSE, sep=",")
 
 #can be recovered by
-#r <- read.table("final_wide.txt", sep=",", header=TRUE)
+#twide <- read.table("final_wide.txt", sep=",", header=TRUE)
+#tlong <- read.table("final_long.txt", sep=",", header=TRUE)
 
 # print head of table
 print("sample wide format:(only first 6 columns displayed)")

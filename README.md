@@ -37,19 +37,18 @@ data file can be read back in with:
 
 ## Sample output data
 below is a snipet of data file with reduced number of columns for readability
-    > source("r.R")
-    [1] "sample wide format:(only first 6 columns displayed)"
-      subject activityDescription fBodyAccJerk-mean()-X fBodyAccJerk-mean()-Y fBodyAccJerk-mean()-Z fBodyAccJerk-std()-X
-    1       1              LAYING           -0.95707388           -0.92246261            -0.9480609           -0.9641607
-    2       1             SITTING           -0.98659702           -0.98157947            -0.9860531           -0.9874930
-    3       1            STANDING           -0.99463080           -0.98541870            -0.9907522           -0.9950738
-    4       1             WALKING           -0.17054696           -0.03522552            -0.4689992           -0.1335866
-    5       1  WALKING_DOWNSTAIRS           -0.02766387           -0.12866716            -0.2883347           -0.0863279
-    [1] "sample long format:"
-      subject activityDescription              variable       value
-    1       1              LAYING fBodyAccJerk-mean()-X -0.95707388
-    2       1             SITTING fBodyAccJerk-mean()-X -0.98659702
-    3       1            STANDING fBodyAccJerk-mean()-X -0.99463080
-    4       1             WALKING fBodyAccJerk-mean()-X -0.17054696
-    5       1  WALKING_DOWNSTAIRS fBodyAccJerk-mean()-X -0.02766387
-
+> source("r.R")
+[1] "sample wide format:(only first 6 columns displayed)"  
+  subject activityDescription fBodyAccJerk-mean()-X fBodyAccJerk-mean()-Y fBodyAccJerk-mean()-Z fBodyAccJerk-std()-X  
+1       1              LAYING           -0.95707388           -0.92246261            -0.9480609           -0.9641607  
+2       1             SITTING           -0.98659702           -0.98157947            -0.9860531           -0.9874930  
+3       1            STANDING           -0.99463080           -0.98541870            -0.9907522           -0.9950738  
+4       1             WALKING           -0.17054696           -0.03522552            -0.4689992           -0.1335866  
+5       1  WALKING_DOWNSTAIRS           -0.02766387           -0.12866716            -0.2883347           -0.0863279  
+[1] "sample long format:"  
+  subject activityDescription              variable       value  
+1       1              LAYING fBodyAccJerk-mean()-X -0.95707388  
+2       1             SITTING fBodyAccJerk-mean()-X -0.98659702  
+3       1            STANDING fBodyAccJerk-mean()-X -0.99463080  
+4       1             WALKING fBodyAccJerk-mean()-X -0.17054696  
+5       1  WALKING_DOWNSTAIRS fBodyAccJerk-mean()-X -0.02766387  
