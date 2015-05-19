@@ -25,6 +25,11 @@ script works by following the below steps
 * generate both wide format and long format
 * save to final_wide.txt and final_long.txt with write.table(), using "," as separator
 
+## Two ways to aggregate data
+two ways to aggregate data is presented in the script
+* using aggregate() function
+* using reshape2's melt() + dcast() function
+
 ## Output file format
 both wide and long format output files are generated
 * "final_wide.txt" for file generated in wide format
@@ -37,7 +42,7 @@ data file can be read back in with:
 
 ## Sample output data
 below is a snipet of data file with reduced number of columns for readability
-> source("r.R")
+> source("r.R")  
 [1] "sample wide format:(only first 6 columns displayed)"  
   subject activityDescription fBodyAccJerk-mean()-X fBodyAccJerk-mean()-Y fBodyAccJerk-mean()-Z fBodyAccJerk-std()-X  
 1       1              LAYING           -0.95707388           -0.92246261            -0.9480609           -0.9641607  
